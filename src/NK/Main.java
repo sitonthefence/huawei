@@ -1,29 +1,51 @@
 package NK;
-import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Main {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        String input = scanner.nextLine();
-        String[] heights = input.split(",");
-        int[] zhizhu_heights = new int[heights.length];
+class Solution {
+    private final String[] letterMap = {
+            "",    // 0
+            "",    // 1
+            "abc", // 2
+            "def", // 3
+            "ghi", // 4
+            "jkl", // 5
+            "mno", // 6
+            "pqrs", // 7
+            "tuv", // 8
+            "wxyz" // 9
+    };
 
-        for (int i = 0; i < heights.length; i++) {
-            zhizhu_heights[i] = Integer.parseInt(heights[i]);
+    private List<String> result;
+    private StringBuilder s;
+
+    public List<String> letterCombinations(String digits) {
+        s = new StringBuilder();
+        result = new ArrayList<>();
+
+        if (digits.length() == 0) {
+            return result;
         }
 
-        int max_area = 0;
+        backtracking(digits, 0);
 
-        for (int i = 0; i < zhizhu_heights.length - 1; i++) {
-            for (int j = i + 1; j < zhizhu_heights.length; j++) {
-                int distance = j - i;
-                int height = Math.min(zhizhu_heights[i], zhizhu_heights[j]);
-                int area = distance * height;
-                max_area = Math.max(max_area, area);
-            }
+        return result;
+    }
+
+    private void backtracking(String digits, int index) {
+        if (index == digits.length()) {
+            result.add(s.toString());
+            return;
         }
 
-        System.out.println(max_area);
+        int digit = digits.charAt(index) - '0';
+        String letters = letterMap[digit];
+
+        for (int i = 0; i < letters.length(); i++) {
+            s.append(letters.charAt(i));
+            backtracking(digits, index + 1);
+            s.deleteCharAt(s.length() - 1);
+        }
     }
 }
 
