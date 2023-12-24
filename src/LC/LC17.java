@@ -4,22 +4,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LC17 {
+
     static List<String> result =new ArrayList<>();
     static StringBuilder stringBuilder=new StringBuilder();
     static String[] numString={"","","abc","def","ghi","jkl","mno","pqrs","tuv","wxyz"};
     public static void main(String[] args) {
-        letterCombinations("123");
+        letterCombinations("254");
         System.out.println(result);
     }
     public static List<String> letterCombinations(String digits) {
-       if(digits.length()==0||digits==null){
+       if(digits==null||digits.length()==0){
            return result;
        }
         backtracking(digits,0);
        return result;
     }
+
     public static void backtracking(String digits,int index){
-        if(stringBuilder.length()==digits.length()){
+        if(index==digits.length()){
             result.add(stringBuilder.toString());
             return;
         }

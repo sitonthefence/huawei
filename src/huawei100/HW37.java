@@ -8,7 +8,7 @@ public class HW37 {
         while (in.hasNextInt()){
             int sum = in.nextInt();
             System.out.println(getCount(sum, 0));
-
+            System.out.println(getCount2(sum));
         }
 
 
@@ -22,5 +22,15 @@ public class HW37 {
         }
         return Math.min(getCount(sum+1,count+1),getCount(sum-1,count+1));
     }
+    public static int getCount2(int sum){
+        if(sum==1){
+            return 0;
+        }
+        if(sum%2==0){
+            return     getCount2(sum/2)+1;
+        }
+        return Math.min(getCount2(sum+1),getCount2(sum-1))+1;
+    }
+
 
 }
