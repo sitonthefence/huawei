@@ -1,54 +1,40 @@
 package NK;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Scanner;
 
-class Solution {
-    private final String[] letterMap = {
-            "",    // 0
-            "",    // 1
-            "abc", // 2
-            "def", // 3
-            "ghi", // 4
-            "jkl", // 5
-            "mno", // 6
-            "pqrs", // 7
-            "tuv", // 8
-            "wxyz" // 9
-    };
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Set;
 
-    private List<String> result;
-    private StringBuilder s;
 
-    public List<String> letterCombinations(String digits) {
-        s = new StringBuilder();
-        result = new ArrayList<>();
-
-        if (digits.length() == 0) {
-            return result;
+public class Main {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        Map<Integer,Integer> map = new HashMap<>();
+        while (in.hasNextInt()) { // 注意 while 处理多个 case
+            int num = in.nextInt();
+            int key = num + 1 ;
+            if(map.get(key)!=null){
+                map.put(key,map.get(key)+1);
+            }else{
+                map.put(key,1);
+            }
+            Set<Integer> set = map.keySet();
+            int sum = 0 ;
+            for(int k : set){
+                int v = map.get(k);
+                if(k<v){
+                    int x = v/k;
+                    if(v%k==0){
+                        sum += x*k;
+                    }else{
+                        sum += (x+1)*k;
+                    }
+                }else{
+                    sum += k;
+                }
+            }
+            System.out.println(sum);
+        }
         }
 
-        backtracking(digits, 0);
-
-        return result;
-    }
-
-    private void backtracking(String digits, int index) {
-        if (index == digits.length()) {
-            result.add(s.toString());
-            return;
-        }
-
-        int digit = digits.charAt(index) - '0';
-        String letters = letterMap[digit];
-
-        for (int i = 0; i < letters.length(); i++) {
-            s.append(letters.charAt(i));
-            backtracking(digits, index + 1);
-            s.deleteCharAt(s.length() - 1);
-        }
-    }
 }
-
-
-
-
