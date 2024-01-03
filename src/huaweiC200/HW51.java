@@ -25,17 +25,13 @@ public class HW51 {
                 }
                 for (int j = 0; j < arr[i].size(); j++) {
                     queue.add(arr[i].get(j));
-
                 }
                 if (!queue.isEmpty()){
                     queue.poll();
                     total++;
                 }
-
             }
             System.out.println(total);
-
-
         }
     }
 

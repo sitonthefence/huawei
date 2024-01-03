@@ -31,14 +31,8 @@ public class HW23 {
                 }else {
                     left=middle+1;
                 }
-
-
             }
             System.out.println(result);
-
-
-
-
         }
 
     }
@@ -52,8 +46,5 @@ public class HW23 {
             }
         }
         return time;
-
-
-
     }
 }
