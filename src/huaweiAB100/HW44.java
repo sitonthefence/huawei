@@ -14,16 +14,16 @@ public class HW44 {
                 int right=0;
               while (right<split[i].length()-1){
                    for (int j = 1; j < split[i].length(); j++) {
-                       if(split[i].charAt(right)>split[i].charAt(j)){
-                           max=Math.max(right-left+1,max);
-                           left=right+1;
-                           right=left;
+                      if(split[i].charAt(right)>split[i].charAt(j)){
+                          max=Math.max(right-left+1,max);
+                          left=right+1;
+                          right=left;
 
-                       }else {
-                           right++;
-                       }
-                   }
-                   if (split[i].charAt(split[i].length()-1)>=split[i].charAt(split[i].length()-2)){
+                      }else {
+                          right++;
+                      }
+                  }
+                  if (split[i].charAt(split[i].length()-1)>=split[i].charAt(split[i].length()-2)){
                        max=Math.max(split[i].length()-left,max);
 
                    }

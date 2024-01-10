@@ -6,7 +6,7 @@ import java.util.ArrayDeque;
 public class LC402 {
 
     public static void main(String[] args) {
-        System.out.println(removeKdigits("10", 2));
+        System.out.println(removeKdigits("1432219", 3));
     }
     public static String removeKdigits(String num,int k){
         ArrayDeque<Character> arrayDeque=new ArrayDeque<>();
