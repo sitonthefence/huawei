@@ -15,10 +15,10 @@ public class HW22 {
             for (int i = 0; i < numArray.length; i++) {
                 used[i]=true;
                 dfs(numArray[i],colorArray[i],numArray,colorArray,1,used);
-                used[i]=false;
-            }
+        used[i]=false;
+    }
             System.out.println(max);
-        }
+}
 
     }
     public static void dfs(String num,String color, String[] numArray, String[] colorArray,int count,boolean[] used){

@@ -1,49 +1,44 @@
 package NK;
-
-
 import java.util.*;
 
 public class Main {
-    public static int check(int k, List<Integer> nums) {
-        int left = 0, right = nums.size() - 1, ans = 0;
-        while (left <= right) {
-            if (nums.get(left) + nums.get(right) > k) {
-                right--;
-            } else {
-                left++;
-                right--;
-            }
-            ans++;
-        }
-        return ans;
-    }
+    private static final Scanner s = new Scanner(System.in);
+
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        int m = scanner.nextInt();
-
-        List<Integer> nums = new ArrayList<>();
-        while (scanner.hasNextInt()) {
-            nums.add(scanner.nextInt());
+        int t = s.nextInt();
+        while (t-- > 0) {
+            int n = s.nextInt();
+            int[] a = new int[n];
+            for (int i = 0; i < n; i++) a[i] = s.nextInt();
+            Arrays.sort(a);
+            System.out.println(f(a, 0));
         }
-        Collections.sort(nums);
+        s.close();
+    }
 
-        int left = Collections.max(nums);
-        int right = nums.stream().mapToInt(Integer::intValue).sum() + 1;
-
-        while (left < right) {
-            int mid = left + (right - left) / 2;
-            if (check(mid, nums) <= m) {
-                right = mid;
-            } else {
-                left = mid + 1;
+    public static int f(int[] a, int i) {
+        int res = 0;
+        for (int j = i; j < a.length - 2; j++) {
+            int x = a[j];
+            if (x == 0) continue;
+            for (int k = j + 1; k < a.length - 1; k++) {
+                int y = a[k];
+                if (y == 0) continue;
+                for (int l = k + 1; l < a.length; l++) {
+                    int z = a[l];
+                    if (z == 0) continue;
+                    if (x * x + y * y == z * z) {
+                        a[j] = a[k] = a[l] = 0;
+                        res = Math.max(res, f(a, j + 1) + 1);
+                        a[j] = x;
+                        a[k] = y;
+                        a[l] = z;
+                        if (res == 3) return res;
+                    }
+                }
             }
         }
-
-        System.out.println(left);
+        return res;
     }
 }
-
-
-
-
