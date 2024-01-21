@@ -1,92 +1,64 @@
 package NK;
-import java.util.Arrays;
-import java.util.Scanner;
-import java.util.Stack;
+import java.util.*;
 
 public class Main1 {
     public static void main(String[] args) {
-        // 创建Scanner对象以读取用户输入
-        Scanner scanner = new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
 
-        // 读取测试数据组数
-        int testCases = scanner.nextInt();
-        // 创建一个二维数组来存储每组测试数据
-        int[][] inputData = new int[testCases][];
+        String[] sentences = sc.nextLine().split("[,.;]");
+        String[] words = sc.nextLine().split("[,.;]");
 
-        // 读取每组测试数据
-        for (int i = 0; i < testCases; i++) {
-            // 读取线段数量
-            int segments = scanner.nextInt();
-            // 创建一个数组来存储线段长度
-            int[] lengths = new int[segments];
-            // 读取每条线段的长度
-            for (int j = 0; j < segments; j++) {
-                lengths[j] = scanner.nextInt();
-            }
-            // 将线段长度数组存入inputData数组
-            inputData[i] = lengths;
-        }
-
-        // 遍历每组测试数据
-        for (int[] lengths : inputData) {
-            // 对线段长度进行升序排序
-            Arrays.sort(lengths);
-            // 调用nonRecursiveDFS函数并输出结果
-            System.out.println(nonRecursiveDFS(lengths));
-        }
+        System.out.println(getResult(sentences, words));
     }
 
-    public static int nonRecursiveDFS(int[] lengths) {
-        int maxTriangles = 0;
-        boolean[] usedSegments = new boolean[lengths.length];
-        Stack<State> stack = new Stack<>();
-        stack.push(new State(0, 0, usedSegments));
+    public static String getResult(String[] sentences, String[] words) {
+        // wordSet 记录词库词汇
+        HashSet<String> wordSet = new HashSet<>(Arrays.asList(words));
 
-        // 遍历状态栈
-        while (!stack.isEmpty()) {
-            State currentState = stack.pop();
-            int currentIndex = currentState.index;
-            int currentCount = currentState.count;
-            usedSegments = currentState.used.clone();
+        // queue记录待分词语句
+        LinkedList<String> queue = new LinkedList<>(Arrays.asList(sentences));
 
-            maxTriangles = Math.max(maxTriangles, currentCount);
+        // ans记录最终分词结果
+        LinkedList<String> ans = new LinkedList<>();
 
-            // 遍历线段数组，从currentIndex开始
-            for (int i = currentIndex; i < lengths.length; i++) {
-                if (usedSegments[i]) continue;
-                for (int j = i + 1; j < lengths.length; j++) {
-                    if (usedSegments[j]) continue;
-                    for (int k = j + 1; k < lengths.length; k++) {
-                        if (usedSegments[k]) continue;
+        while (queue.size() > 0) {
+            // 待分词的句子
+            String sentence = queue.removeFirst();
 
-                        // 检查当前三条线段是否满足勾股定理
-                        if (lengths[i] * lengths[i] + lengths[j] * lengths[j] == lengths[k] * lengths[k]) {
-                            boolean[] newUsedSegments = usedSegments.clone();
-                            newUsedSegments[i] = true;
-                            newUsedSegments[j] = true;
-                            newUsedSegments[k] = true;
-                            stack.push(new State(i + 1, currentCount + 1, newUsedSegments));
-                        }
+            int r = sentence.length();
+            for (; r > 0; r--) {
+                // 截取句子 [0,r) 范围子串词汇, 这样的就能实现优先最长匹配，并且由于是必须从0索引开始截取，因此满足了分词顺序优先
+                String fragment = sentence.substring(0, r);
+
+                // 若词库中是否存在该子串词汇
+                if (wordSet.contains(fragment)) {
+                    // 则将对应子串词汇纳入结果
+                    ans.addLast(fragment);
+                    wordSet.remove(fragment); // 我理解词库中每个词汇只能使用一次，因此这里将词库中使用过的词汇移除
+
+                    // 若子串词汇只是句子部分，则句子剩余部分还要继续去词库中查找
+                    if (r < sentence.length()) {
+                        queue.addFirst(sentence.substring(r));
                     }
+
+                    break;
+                }
+            }
+
+            // 没有在词库中找到对应子串词汇，则输出单个字母
+            if (r == 0) {
+                // 注意，这里只放一个字母到结果中，句子剩余部分继续去词库中查找
+                ans.add(sentence.charAt(0) + "");
+
+                if (sentence.length() > 1) {
+                    queue.addFirst(sentence.substring(1));
                 }
             }
         }
 
-        return maxTriangles;
-    }
+        StringJoiner sj = new StringJoiner(",");
+        ans.forEach(sj::add);
 
-    // State类用于存储每个状态的信息，包括当前索引、已找到的直角三角形数量和已使用的线段
-    static class State {
-        int index;
-        int count;
-        boolean[] used;
-
-        State(int index, int count, boolean[] used) {
-            this.index = index;
-            this.count = count;
-            this.used = used;
-        }
+        return sj.toString();
     }
 }
-
-
