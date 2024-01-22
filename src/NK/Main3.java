@@ -1,66 +1,105 @@
 package NK;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Scanner;
 
 public class Main3 {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-        int n = Integer.parseInt(sc.nextLine());
-        int k = Integer.parseInt(sc.nextLine());
+        int R = sc.nextInt();
 
-        ArrayList<LinkedList<Integer>> lists = new ArrayList<>();
-
-        while (sc.hasNextLine()) {
-            String line = sc.nextLine();
-
-            // 本地测试，以空行作为输入截止条件
-            if (line.length() == 0) break;
-
-            Integer[] nums =
-                    Arrays.stream(line.split(" ")).map(Integer::parseInt).toArray(Integer[]::new);
-
-            lists.add(new LinkedList<>(Arrays.asList(nums)));
+        int[] N = new int[R + 1];
+        for (int i = 0; i <= R; i++) {
+            N[i] = sc.nextInt();
         }
 
-        // 窗口矩阵，k行n列，每一列对应一个窗口，这里将二维矩阵一维化，方便后面赋值
-        int[] windows = new int[k * n];
-        // 窗口矩阵中正在赋值的索引位置
-        int idx = 0;
-        // 正在从第level个列表中取值
-        int level = 0;
+        int D = sc.nextInt();
 
-        // 当窗口矩阵填满后，结束循环
-        while (idx < windows.length) {
-            // 当前轮次是否发生了"借"动作
-            boolean flag = false;
+        System.out.println(getResult(R, N, D));
+    }
 
-            // 从第level个列表中取前n个元素
-            for (int i = 0; i < n; i++) {
-                windows[idx++] = lists.get(level).removeFirst();
+    public static int getResult(int R, int[] N, int D) {
+        // 将D值转化为二进制形式，并且为了和N[]的阶位进行对应，这里将D的二进制进行了反转
+        int[] subtrahend =
+                Arrays.stream(new StringBuilder(Integer.toBinaryString(D)).reverse().toString().split(""))
+                        .mapToInt(Integer::parseInt)
+                        .toArray();
 
-                // 如果第level个列表没有元素了，则继续切到下一个列表中"借"
-                if (lists.get(level).size() == 0 && lists.size() > 1) {
-                    lists.remove(level); // 删除空列表
-                    level %= lists.size(); // 防止越界
-                    flag = true; // 发生了"借"动作
+        // count记录N能承载几个D
+        int count = 0;
+
+        // N中高阶信道的单个信道就能满足D，因此这些高阶信道有几个，即能承载几个D
+        for (int i = R; i >= subtrahend.length; i--) {
+            // R ~ subtrahend.length 阶的单个信道就能承载一个D，因此这些信道有几个，就能承载几个D
+            count += N[i];
+        }
+
+        // 0 ~ subtrahend.length - 1 阶的单个信道无法承载一个D，因此这些阶需要组合起来才能承载一个D
+        int[] minuend = Arrays.copyOfRange(N, 0, subtrahend.length);
+
+        // 进行二进制减法
+        while (binary_sub(minuend, subtrahend)) {
+            count++;
+        }
+
+        return count;
+    }
+
+    /**
+     * 二进制减法
+     *
+     * @param minuend 被减数
+     * @param subtrahend 减数
+     * @return 被减数是否为正数
+     */
+    public static boolean binary_sub(int[] minuend, int[] subtrahend) {
+        // 进行减法运算逻辑, 从高位开始
+        for (int i = minuend.length - 1; i >= 0; i--) {
+
+            if (minuend[i] >= subtrahend[i]) {
+                // 如果对应位的信道数足够，则直接相减
+                minuend[i] -= subtrahend[i];
+            } else {
+                // 如果对应位的信道数不足，此时有两种策略，一是向低位借，一是向高位借
+                // 具体向哪里借，需要看 minuend 的 [0,i] 低位部分是否能够承载 subtrahend[0, i] 低位部分
+                if (calc_bin(Arrays.copyOfRange(minuend, 0, i + 1))
+                        < calc_bin(Arrays.copyOfRange(subtrahend, 0, i + 1))) {
+                    // 如果minuend 的 [0,i]不能承载，则向高位借，即从j=i+1位开始借
+                    int j = i + 1;
+                    while (j < minuend.length) {
+                        if (minuend[j] > 0) {
+                            // 如果高位 j 有信道可借，则借
+                            minuend[j] -= 1;
+                            return true;
+                        } else {
+                            // 否则继续向更高位探索
+                            j += 1;
+                        }
+                    }
+                    // 如果所有高位都没有富余信道数，则说明减法结果为负数
+                    return false;
+                } else {
+                    // 如果minuend 的 [0,i]可以承载，则向低位借(向低位借，可以避免浪费)
+                    // 此时minuend[i]为负数，表示欠债
+                    minuend[i] -= subtrahend[i];
+
+                    // 将当前阶位的欠债，转移到前面的低阶位上，注意转移时，欠债x2
+                    minuend[i - 1] += minuend[i] << 1;
+
+                    // 转移后，当前阶位的欠债变为0
+                    minuend[i] = 0;
                 }
             }
-
-            // 如果没有发生"借"动作，则需要切到下一行
-            if (!flag) {
-                level = (level + 1) % lists.size(); // 防止越界
-            }
         }
 
-        StringJoiner sj = new StringJoiner(" ");
+        return true;
+    }
 
-        // 遍历窗口矩阵的每一列
-        for (int j = 0; j < n; j++) { // 遍历列号
-            for (int i = 0; i < k; i++) { // 遍历行号
-                sj.add(windows[i * n + j] + ""); // 将每一列的元素进行拼接
-            }
+    public static int calc_bin(int[] bin) {
+        int ans = 0;
+        for (int i = 0; i < bin.length; i++) {
+            ans += bin[i] * (1 << i);
         }
-
-        System.out.println(sj);
+        return ans;
     }
 }
