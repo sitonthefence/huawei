@@ -21,13 +21,13 @@ public class HW23THREE {
             max=Math.max(max,arr[i]);
         }
         int person = in.nextInt();
-        int[] bucket=new int[person];
         int left=max;
         int right=sum;
         int target=right;
         while (left<right){
             int mid=(left+right)/2;
-            if(dfs(bucket,mid,0,arr)){
+            //注意 new int[person]
+            if(dfs(new int[person],mid,0,arr)){
                 right=mid;
                 target=mid;
             }else {
@@ -42,10 +42,13 @@ public class HW23THREE {
             return true;
         }
         for (int i = 0; i <bucket.length ; i++) {
-            if(bucket[i]+arr[i]<=mid){
-                bucket[i]+=arr[i];
+            if(i>0&&bucket[i]==bucket[i-1]) continue;
+
+            if(bucket[i]+arr[index]<=mid){
+                //注意index
+                bucket[i]+=arr[index];
                 if(dfs(bucket,mid,index+1,arr)) return true;
-                bucket[i]-=arr[i];
+                bucket[i]-=arr[index];
             }
 
 

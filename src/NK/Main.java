@@ -1,88 +1,74 @@
 package NK;
 
-import java.util.LinkedList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
-    static int n;
-    static int[][] matrix;
-    static int[][] candy;
-    static int[][] offsets = {{1, 0}, {0, -1}, {-1, 0}, {0, 1}};
-
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-        n = sc.nextInt();
+        int m = Integer.parseInt(sc.nextLine());
+        int[] requirements =
+                Arrays.stream(sc.nextLine().split(" ")).mapToInt(Integer::parseInt).toArray();
 
-        matrix = new int[n][n];
-        candy = new int[n][n];
+        System.out.println(getResult(m, requirements));
+    }
 
-        LinkedList<Integer> queue = new LinkedList<>();
+    public static long getResult(int m, int[] requirements) {
+        Arrays.sort(requirements);
 
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                candy[i][j] = -1;
+        int n = requirements.length;
 
-                matrix[i][j] = sc.nextInt();
-                // 妈妈的位置
-                if (matrix[i][j] == -3) {
-                    candy[i][j] = 0;
-                    queue.add(i * n + j); // 二维坐标一维化
-                }
+        // 每辆自行车的限重 至少是 最重的那个人的体重
+        long min = requirements[n - 1];
+        // 每辆自行车的限重 至多是 最重的和次重的那两个的体重
+        long max = requirements[n - 2] + requirements[n - 1];
+
+        long ans = max;
+
+        // 二分取中间值
+        while (min <= max) {
+            long mid = (min + max) >> 1; // 需要注意的是，min，max单独看都不超过int，但是二者相加会超过int，因此需要用long类型
+
+            if (check(mid, m, requirements)) {
+                // 如果mid限重，可以满足m辆车带走n个人，则mid就是一个可能解，但不一定是最优解
+                ans = mid;
+                // 继续尝试更小的限重，即缩小右边界
+                max = mid - 1;
+            } else {
+                // 如果mid限重，不能满足m辆车带走n个人，则mid限重小了，我们应该尝试更大的限重，即扩大左边界
+                min = mid + 1;
             }
         }
 
-        // 记录题解
-        int ans = -1;
+        return ans;
+    }
 
-        // bfs 按层扩散
-        while (queue.size() > 0) {
-            // 记录当前扩散层的点
-            LinkedList<Integer> newQueue = new LinkedList<>();
+    /**
+     * @param limit 每辆自行车的限重
+     * @param m m辆自行车
+     * @param requirements n个人的体重数组
+     * @return m辆自行车，每辆限重limit的情况下，能否带走n个人
+     */
+    public static boolean check(long limit, int m, int[] requirements) {
+        int l = 0; // 指向体重最轻的人
+        int r = requirements.length - 1; // 指向体重最重的人
 
-            // 当前层是否有宝宝所在的点
-            boolean flag = false;
+        // 需要的自行车数量
+        int need = 0;
 
-            for (int pos : queue) {
-                // 源点坐标
-                int x = pos / n;
-                int y = pos % n;
-
-                // 向四个方向扩散
-                for (int[] offset : offsets) {
-                    // 当前扩散点坐标
-                    int newX = x + offset[0];
-                    int newY = y + offset[1];
-
-                    // 当前扩散点坐标越界，或者扩散点是墙，则无法扩散
-                    if (newX < 0 || newX >= n || newY < 0 || newY >= n || matrix[newX][newY] == -1) continue;
-
-                    // 当前扩散点坐标对应的糖果数量为-1，说明对应扩散点坐标位置还没有加入到当前扩散层
-                    if (candy[newX][newY] == -1) {
-                        newQueue.addLast(newX * n + newY); // 加入当前扩散层
-                    }
-
-                    // 当前扩散点可能会被多个源点扩散到，因此比较保留扩散过程中带来的较大糖果数
-                    // candy[newX][newY] 记录的是当前扩散点获得的糖果数
-                    // candy[x][y] + Math.max(0, matrix[newX][newY]) 记录的是从源点(x,y)带来的糖果数 + (newX,newY)位置原本的糖果数
-                    candy[newX][newY] =
-                            Math.max(candy[newX][newY], candy[x][y] + Math.max(0, matrix[newX][newY]));
-
-                    // 如果当前扩散点是宝宝位置，则可以停止后续层级的bfs扩散，因为已经找到宝宝的最短路径长度（即扩散层数）
-                    if (matrix[newX][newY] == -2) {
-                        ans = candy[newX][newY];
-                        flag = true;
-                    }
-                }
+        while (l <= r) {
+            // 如果最轻的人和最重的人可以共享一辆车，则l++,r--，
+            // 否则最重的人只能单独坐一辆车，即仅r--
+            if (requirements[l] + requirements[r] <= limit) {
+                l++;
             }
-
-            // 已经找到去宝宝位置的最短路径和最大糖果数，则终止bfs
-            if (flag) break;
-
-            // 否则继续
-            queue = newQueue;
+            r--;
+            // 用掉一辆车
+            need++;
         }
 
-        System.out.println(ans);
+        // 如果m >= need，当前有的自行车数量足够
+        return m >= need;
     }
 }
