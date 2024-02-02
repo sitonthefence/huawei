@@ -6,9 +6,8 @@ public class HW51 {
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
         while (in.hasNext()){
-            String source = in.next();
-            String substring = source.substring(1, source.length() - 1);
-            String[] split = substring.split(",");
+
+            String[] split = in.next().split(",");
             int[] arr=new int[split.length];
             for (int i = 0; i < arr.length; i++) {
                 arr[i]=Integer.valueOf(split[i]);

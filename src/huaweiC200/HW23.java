@@ -15,6 +15,7 @@ public class HW23 {
             int[] employee=new int[Integer.valueOf(in.nextLine())];
             int time=0;
             while (!queue.isEmpty()){
+              //  Arrays.sort(employee);
                 for (int i = 0; i < employee.length; i++) {
                     if(employee[i]==0&&!queue.isEmpty()){
                         employee[i]=queue.poll();
@@ -23,6 +24,7 @@ public class HW23 {
                         employee[i]--;
                     }
                 }
+
                 time++;
             }
             int max=0;

@@ -17,10 +17,17 @@ public class HW46 {
              int maxSum=0;
              int currentSum=0;
              while (right<arr.length){
+                 if (arr[right]>money) {
+                     right++;
+                     left=right;
+                     currentSum=0;
+                     continue;
+                 }
                  currentSum=currentSum+arr[right];
+
                  while (currentSum>money){
-                     currentSum=currentSum-arr[left];
-                    left++;
+                         currentSum=currentSum-arr[left];
+                         left++;
                  }
                  maxSum=Math.max(maxSum,right-left+1);
                 right++;

@@ -1,7 +1,7 @@
 package huaweiC100;
 
 import java.util.*;
-import java.util.regex.Pattern;
+
 
 public class HW31 {
     public static void main(String[] args) {

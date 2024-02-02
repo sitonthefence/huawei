@@ -1,5 +1,4 @@
 package huaweiC200;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,34 +15,34 @@ public class HW66 {
     public static void main(String[] args) {
 
         Scanner in = new Scanner(System.in);
-            int N = in.nextInt();
-             nums=new int[N];
-            for (int i = 0; i < N; i++) {
-             nums[i]=in.nextInt();
+        int N = in.nextInt();
+        nums=new int[N];
+        for (int i = 0; i < N; i++) {
+            nums[i]=in.nextInt();
         }
 
-             M = in.nextInt();
-             password=new int[M][M];
-            for (int i = 0; i < M; i++) {
-                for (int j = 0; j < M; j++) {
-                    password[i][j]=in.nextInt();
-                }
+        M = in.nextInt();
+        password=new int[M][M];
+        for (int i = 0; i < M; i++) {
+            for (int j = 0; j < M; j++) {
+                password[i][j]=in.nextInt();
             }
-            visited=new boolean[M][M];
-            path=new LinkedList<>();
-            result=new ArrayList<>();
-            for (int i = 0; i <M ; i++) {
-                for (int j = 0; j <M ; j++) {
-                    if(dfs(i,j,0)){
-                        for (int[] ints : result.get(0)) {
-                            System.out.print(ints[0]+" "+ints[1]+" ");
-                        }
-                        return;
+        }
+        visited=new boolean[M][M];
+        path=new LinkedList<>();
+        result=new ArrayList<>();
+        for (int i = 0; i <M ; i++) {
+            for (int j = 0; j <M ; j++) {
+                if(dfs(i,j,0)){
+                    for (int[] ints : result.get(0)) {
+                        System.out.print(ints[0]+" "+ints[1]+" ");
                     }
-
+                    return;
                 }
+
             }
-            System.out.println("error");
+        }
+        System.out.println("error");
     }
     public  static boolean dfs(int i,int j,int index){
         if (path.size()==nums.length){
@@ -57,7 +56,7 @@ public class HW66 {
         visited[i][j]=true;
         path.offerLast(new int[]{i,j});
 
-        boolean result = dfs(i, j - 1, index + 1) || dfs(i - 1, j, index + 1) ||
+        boolean result = dfs(i-1, j, index + 1) || dfs(i, j-1, index + 1) ||
                 dfs(i, j + 1, index + 1) || dfs(i + 1, j, index+1);
         visited[i][j]=false;
         path.pollLast();

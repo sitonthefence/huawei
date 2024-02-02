@@ -4,14 +4,27 @@ import java.util.Scanner;
 
 public class HW68 {
     public static void main(String[] args) {
-        try {
+
             Scanner in = new Scanner(System.in);
             while (in.hasNextInt()){
                 int length = in.nextInt();
+                if(length<1||length>100){
+                    System.out.println("12345");
+                    return;
+                }
+
                 int luckyNumber = in.nextInt();
+                if(luckyNumber<-100||luckyNumber>100){
+                    System.out.println("12345");
+                    return;
+                }
                 int[] arr=new int[length];
                 for (int i = 0; i < arr.length; i++) {
                     arr[i]=in.nextInt();
+                    if(arr[i]<-100||arr[i]>100){
+                        System.out.println("12345");
+                        return;
+                    }
                 }
 
 
@@ -35,10 +48,8 @@ public class HW68 {
                 }
                 System.out.println(max);
             }
-        } catch (Exception e) {
-            System.out.println(12345);
         }
 
 
     }
-}
+

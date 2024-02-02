@@ -52,8 +52,8 @@ public class HW11 {
 
         }
     }
-}
-class Letter{
-    char letter;
-    int num;
+   static class Letter{
+        char letter;
+        int num;
+    }
 }

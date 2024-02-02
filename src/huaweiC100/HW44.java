@@ -1,6 +1,6 @@
 package huaweiC100;
 
-import java.util.Arrays;
+
 import java.util.Scanner;
 
 public class HW44 {
@@ -25,7 +25,7 @@ public class HW44 {
                      result[2]=Math.max(result[1]+arr[2],0);
                  }
                  if(i>=3){
-                     result[i]=Math.max(result[i-1]+arr[i],arr[i-3]);
+                     result[i]=Math.max(result[i-1]+arr[i],result[i-3]);
                  }
             }
             System.out.println(result[split.length-1]);

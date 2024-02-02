@@ -1,7 +1,7 @@
 package huaweiC100;
 
 import java.util.Scanner;
-
+//错误
 public class HW1 {
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
@@ -23,7 +23,7 @@ public class HW1 {
                         break;
                     }
                 }
-                if(flag==false){
+                if(!flag){
                     System.out.println(-1);
                     return;
 

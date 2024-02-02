@@ -22,8 +22,9 @@ public class HW19 {
                 if(x==y&&y!=z){
                 queue.offer(z-y);
                 }else if(x!=y&&y==z){
-                    queue.offer(y-z);
+                    queue.offer(y-x);
                 }else if(x!=y&&y!=z){
+                    if(Math.abs((z-y)-(y-x))!=0)
                     queue.offer(Math.abs((z-y)-(y-x)));
                 }
             }

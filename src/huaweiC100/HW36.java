@@ -1,7 +1,6 @@
 package huaweiC100;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -60,7 +59,6 @@ public class HW36 {
                             if (sum>3){
                                flag=false;
                             }
-
                         }
                     }else {
                         int sum=0;
@@ -74,20 +72,7 @@ public class HW36 {
 
                 }
                 System.out.print(flag+" ");
-
-
-
-
-
-
-
-
-
-
-
             }
-
-
         }
     }
 }

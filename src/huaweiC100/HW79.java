@@ -14,10 +14,10 @@ public class HW79 {
                 arr[i]=in.nextInt();
             }
             Arrays.sort(arr,(o1,o2)->{
-                if(Math.abs(o1.intValue()-height)==Math.abs(o2.intValue()-height)){
-                    return o1.intValue()-o2.intValue();
+                if(Math.abs(o1-height)==Math.abs(o2-height)){
+                    return o1-o2;
                 }
-                return Math.abs(o1.intValue()-height)-Math.abs(o2.intValue()-height);
+                return Math.abs(o1-height)-Math.abs(o2-height);
 
                     }
                     );

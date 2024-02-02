@@ -51,7 +51,7 @@ public class HW50 {
                         return o1.getName().compareTo(o2.getName());
                     }
                     else {
-                        return (o2.getScores().get(finalIndex).intValue())-o1.getScores().get(finalIndex).intValue();
+                        return o2.getScores().get(finalIndex)-o1.getScores().get(finalIndex);
                     }
                 });
             }

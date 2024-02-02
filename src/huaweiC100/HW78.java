@@ -16,6 +16,7 @@ public class HW78 {
                 app.setPriority(in.nextInt());
                 app.setStartTime(getTimeNumber(in.next()));
                 app.setEndTime(getTimeNumber(in.next()));
+                //很重要
                 if(app.startTime>app.endTime){
                     continue;
                 }

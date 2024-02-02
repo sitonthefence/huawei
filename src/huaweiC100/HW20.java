@@ -9,6 +9,7 @@ public class HW20 {
         Scanner in = new Scanner(System.in);
         NodeHW20 root=new NodeHW20("/",null);
         NodeHW20 currentNode=root;
+        String result="";
         while (in.hasNextLine()){
             String source = in.nextLine();
             String[] split = source.split(" ");
@@ -26,10 +27,11 @@ public class HW20 {
                 }
             }else if(split[0].equals("pwd")){
                 if(split.length==1){
-                    System.out.println(currentNode.path);
+                    result=currentNode.path;
                 }
             }
         }
+        System.out.println(result);
     }
     public static boolean check1(String str){
         if(str.matches("[a-z]+")){

@@ -3,6 +3,7 @@ package huaweiC100;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+//有问题
 
 public class HW47 {
     public static void main(String[] args) {
@@ -15,7 +16,6 @@ public class HW47 {
         for (int i = 0; i < split.length; i++) {
             arr[i]=Integer.valueOf(split[i]);
         }
-        StringBuilder stringBuilder=new StringBuilder();
         Map<Integer,Integer> map=new HashMap<>();
         int IndexSum=Integer.MAX_VALUE;
         int a=-1;

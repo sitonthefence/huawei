@@ -23,7 +23,5 @@ public class HW64 {
         }
         System.out.println(maxProfit);
 
-
-
     }
 }

@@ -7,13 +7,8 @@ public class HW59 {
         Scanner in = new Scanner(System.in);
         while (in.hasNextLine()){
             String source = in.nextLine();
-            String target = source.replace("/,/", "/").
-                    replace(",/", "/").
-                    replace("/,", "/").
-                    replace(",", "/");
+            String target = source.replaceAll("/*,/*", "/");
             System.out.println(target);
-
-
         }
     }
 }

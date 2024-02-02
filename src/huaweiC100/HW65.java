@@ -50,47 +50,47 @@ public class HW65 {
 
 
     }
+   static class Node{
+        int val;
+        int left;
+        int right;
 
-}
-class Node{
-    int val;
-    int left;
-    int right;
+        public Node(int val, int left, int right) {
+            this.val = val;
+            this.left = left;
+            this.right = right;
+        }
 
-    public Node(int val, int left, int right) {
-        this.val = val;
-        this.left = left;
-        this.right = right;
+        public Node() {
+        }
+
+        public Node(int val) {
+            this.val = val;
+        }
+
+        public int getVal() {
+            return val;
+        }
+
+        public void setVal(int val) {
+            this.val = val;
+        }
+
+        public int getLeft() {
+            return left;
+        }
+
+        public void setLeft(int left) {
+            this.left = left;
+        }
+
+        public int getRight() {
+            return right;
+        }
+
+        public void setRight(int right) {
+            this.right = right;
+        }
     }
 
-    public Node() {
-    }
-
-    public Node(int val) {
-        this.val = val;
-    }
-
-    public int getVal() {
-        return val;
-    }
-
-    public void setVal(int val) {
-        this.val = val;
-    }
-
-    public int getLeft() {
-        return left;
-    }
-
-    public void setLeft(int left) {
-        this.left = left;
-    }
-
-    public int getRight() {
-        return right;
-    }
-
-    public void setRight(int right) {
-        this.right = right;
-    }
 }

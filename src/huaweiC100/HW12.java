@@ -9,11 +9,18 @@ public class HW12 {
         Scanner in = new Scanner(System.in);
         while (in.hasNext()){
             String source = in.next();
-            String[] split = source.split("@");
-            if(split.length==1){
-                System.out.println(split[0]);
+            if(source.equals("@")){
+                System.out.println("@");
+            }
+                String[] split = source.split("@");
+
+                if(split.length==1){
+                    System.out.println(split[0]);
                 continue;
             }
+                if(split[0].equals(split[1])){
+                    System.out.println("@");
+                }
             Map<String,Integer> map=new LinkedHashMap<>();
             String[] split1 = split[0].split(",");
             for (int i = 0; i < split1.length; i++) {
@@ -36,7 +43,6 @@ public class HW12 {
             String substring = stringBuilder.substring(0, stringBuilder.length() - 1);
             System.out.println(substring);
         }
-
         }
     }
 }
