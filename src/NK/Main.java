@@ -1,74 +1,137 @@
 package NK;
-
-import java.util.Arrays;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
+    static class TreeNode {
+        int num; // 当前节点的值
+        int childSum; // 当前节点的左子树+右子树的和
+        TreeNode leftChild;
+        TreeNode rightChild;
+
+        public TreeNode(int num) {
+            this.num = num;
+            this.childSum = 0;
+            this.leftChild = null;
+            this.rightChild = null;
+        }
+    }
+
+    // 中序遍历序列
+    static int[] midOrder;
+
+    // 前序遍历序列
+    static int[] preOrder;
+
+    // 记录中序遍历序列中，序列元素值所在位置，本题中可能存在重复元素，因此某个序列元素值可能有多个位置
+    static HashMap<Integer, ArrayList<Integer>> midIndexMap = new HashMap<>();
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-        int m = Integer.parseInt(sc.nextLine());
-        int[] requirements =
-                Arrays.stream(sc.nextLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+        midOrder = Arrays.stream(sc.nextLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+        preOrder = Arrays.stream(sc.nextLine().split(" ")).mapToInt(Integer::parseInt).toArray();
 
-        System.out.println(getResult(m, requirements));
-    }
-
-    public static long getResult(int m, int[] requirements) {
-        Arrays.sort(requirements);
-
-        int n = requirements.length;
-
-        // 每辆自行车的限重 至少是 最重的那个人的体重
-        long min = requirements[n - 1];
-        // 每辆自行车的限重 至多是 最重的和次重的那两个的体重
-        long max = requirements[n - 2] + requirements[n - 1];
-
-        long ans = max;
-
-        // 二分取中间值
-        while (min <= max) {
-            long mid = (min + max) >> 1; // 需要注意的是，min，max单独看都不超过int，但是二者相加会超过int，因此需要用long类型
-
-            if (check(mid, m, requirements)) {
-                // 如果mid限重，可以满足m辆车带走n个人，则mid就是一个可能解，但不一定是最优解
-                ans = mid;
-                // 继续尝试更小的限重，即缩小右边界
-                max = mid - 1;
-            } else {
-                // 如果mid限重，不能满足m辆车带走n个人，则mid限重小了，我们应该尝试更大的限重，即扩大左边界
-                min = mid + 1;
-            }
+        int n = midOrder.length;
+        for (int i = 0; i < n; i++) {
+            int num = midOrder[i];
+            midIndexMap.putIfAbsent(num, new ArrayList<>());
+            midIndexMap.get(num).add(i);
         }
 
-        return ans;
+        // 根据中序序列和前序序列还原树结构
+        TreeNode root = buildTree(0, n - 1, 0, n - 1);
+
+        // 记录新的二叉树的的中序遍历序列
+        StringJoiner sj = new StringJoiner(" ");
+        getMidOrder(root, sj);
+        System.out.println(sj);
+    }
+
+    // 二叉树中序遍历
+    public static void getMidOrder(TreeNode root, StringJoiner sj) {
+        if (root == null) {
+            return;
+        }
+
+        // 先遍历左子树
+        TreeNode leftChild = root.leftChild;
+        if (leftChild != null) {
+            getMidOrder(leftChild, sj);
+        }
+
+        // 再遍历根
+        sj.add(root.childSum + "");
+
+        // 最后遍历右子树
+        TreeNode rightChild = root.rightChild;
+        if (rightChild != null) {
+            getMidOrder(rightChild, sj);
+        }
     }
 
     /**
-     * @param limit 每辆自行车的限重
-     * @param m m辆自行车
-     * @param requirements n个人的体重数组
-     * @return m辆自行车，每辆限重limit的情况下，能否带走n个人
+     * 根据中序遍历序列、前序遍历序列还原树结构
+     *
+     * @param midL 中序遍历子序列的左边界
+     * @param midR 中序遍历子序列的右边界
+     * @param preL 前序遍历子序列的左边界
+     * @param preR 前序遍历子序列的右边界
+     * @return 树结构的根节点
      */
-    public static boolean check(long limit, int m, int[] requirements) {
-        int l = 0; // 指向体重最轻的人
-        int r = requirements.length - 1; // 指向体重最重的人
+    public static TreeNode buildTree(int midL, int midR, int preL, int preR) {
+        // 某个节点（子树）对应一段子序列，如果对应子序列范围不存在，则子树也不存在
+        if (preL > preR) return null;
 
-        // 需要的自行车数量
-        int need = 0;
+        // 先根据前序遍历序列得到根节点，前序序列的首元素就是根节点
+        int rootNum = preOrder[preL];
+        TreeNode root = new TreeNode(rootNum);
 
-        while (l <= r) {
-            // 如果最轻的人和最重的人可以共享一辆车，则l++,r--，
-            // 否则最重的人只能单独坐一辆车，即仅r--
-            if (requirements[l] + requirements[r] <= limit) {
-                l++;
-            }
-            r--;
-            // 用掉一辆车
-            need++;
+        // 在中序遍历序列中，找到对应根值的位置，这个位置可能有多个，但是只有一个是正确的
+        for (int idx : midIndexMap.get(rootNum)) {
+            // 如果对应根值位置越界，则不是正确的
+            if (idx < midL || idx > midR) continue;
+
+            // 如果中序的左子树，和前序的左子树不同，则对应根值位置不正确
+            int leftLen = idx - midL;
+            if (notEquals(midL, preL + 1, leftLen)) continue;
+
+            // 如果中序的右子树，和前序的右子树不同，则对应根值位置不正确
+            int rightLen = midR - idx;
+            if (notEquals(idx + 1, preR - rightLen + 1, rightLen)) continue;
+
+            // 找到正确根值位置后，开始分治递归处理左子树和右子树
+            root.leftChild = buildTree(midL, idx - 1, preL + 1, preL + leftLen);
+            root.rightChild = buildTree(idx + 1, midR, preR - rightLen + 1, preR);
+
+            // 记录该节点：左子树+右子树的和（本题新二叉树节点的值）
+            root.childSum =
+                    (root.leftChild == null ? 0 : (root.leftChild.num + root.leftChild.childSum))
+                            + (root.rightChild == null ? 0 : (root.rightChild.num + root.rightChild.childSum));
+
+            break;
         }
 
-        // 如果m >= need，当前有的自行车数量足够
-        return m >= need;
+        return root;
+    }
+
+    /**
+     * 判断两个子数组是否相同（元素相同，顺序可以不同）
+     *
+     * @param midL 子数组1的左边界
+     * @param preL 子数组2的左边界
+     * @param size 子数组的长度
+     * @return 子数组1和子数组2是否相同
+     */
+    public static boolean notEquals(int midL, int preL, int size) {
+        int[] arr1 = Arrays.stream(Arrays.copyOfRange(midOrder, midL, midL + size)).sorted().toArray();
+        int[] arr2 = Arrays.stream(Arrays.copyOfRange(preOrder, preL, preL + size)).sorted().toArray();
+
+        for (int i = 0; i < size; i++) {
+            if (arr1[i] != arr2[i]) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
