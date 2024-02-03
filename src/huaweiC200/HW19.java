@@ -48,15 +48,15 @@ public class HW19 {
           }
           return Math.max(Math.max(getMaxHeight(node.left),getMaxHeight(node.right)),getMaxHeight(node.middle))+1;
     }
+   static class TriNode{
+        int value;
+        TriNode left;
+        TriNode middle;
+        TriNode right;
 
-}
-class TriNode{
-    int value;
-    TriNode left;
-    TriNode middle;
-    TriNode right;
-
-    public TriNode(int value) {
-        this.value = value;
+        public TriNode(int value) {
+            this.value = value;
+        }
     }
+
 }
