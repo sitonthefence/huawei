@@ -49,11 +49,7 @@ public class HW16 {
             return true;
         }
         int temp=total;
-        if(g[x][y]==-1){
-            total=100;
-        }else {
-            total=total-g[x][y];
-        }
+
         used[x][y]=true;
         boolean dfs1 = dfs(g, x+1, y, total, used);
         boolean dfs2 = dfs(g, x-1, y, total, used);
