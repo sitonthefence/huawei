@@ -20,7 +20,7 @@ public class HW51 {
                 arr[in.nextInt()].add(in.nextInt());
             }
             for (int i = 1; i < arr.length; i++) {
-                while (!queue.isEmpty()&&queue.peek()<i){
+                while (!queue.isEmpty()&&queue.peek()>i){
                     queue.poll();
                 }
                 for (int j = 0; j < arr[i].size(); j++) {
