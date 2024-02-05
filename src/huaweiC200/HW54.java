@@ -34,7 +34,7 @@ public class HW54 {
                     answer.add(substring);
 
                     if(sentence.length()>1){
-                        deque.offerLast(sentence.substring(1));
+                        deque.offerFirst(sentence.substring(1));
                     }
 
                 }

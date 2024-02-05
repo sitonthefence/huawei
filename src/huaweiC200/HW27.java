@@ -39,7 +39,7 @@ public class HW27 {
                 cost+=3*dif;
                 if (i==height.length-1||height[i]>height[i+1]){
                     if(strength>cost){
-                        if(order==true){
+                        if(order){
                             result.add(i);
                         }else {
                             result.add(height.length-1-i);
