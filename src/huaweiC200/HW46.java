@@ -24,19 +24,19 @@ public class HW46 {
         }
     }
     public static void requestMemory(int request){
-        if(request==0){
+        if(request==0||request>100){
             System.out.println("error");
             return;
         }
-        if(list.size()==0&&request<=100){
+        if(list.size()==0){
             list.add(new Pair(0,request-1));
             System.out.println(0);
             return;
         }
-        if(list.size()==0&&request>100){
+    /*    if(list.size()==0&&request>100){
             System.out.println("error");
             return;
-        }
+        }*/
         //这个要写
         int index=-1;
         int currentLength;

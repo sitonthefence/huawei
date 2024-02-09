@@ -1,5 +1,6 @@
 package huaweiC100;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class HW17 {
@@ -8,10 +9,12 @@ public class HW17 {
         Scanner in = new Scanner(System.in);
          int[] arr =new int[10];
          int allSum=0;
+
         for (int i = 0; i < 10; i++) {
             arr[i]=in.nextInt();
             allSum+=arr[i];
         }
+        Arrays.sort(arr);
         dfs(arr,0,0,allSum,0);
         System.out.println(min);
     }
@@ -22,6 +25,7 @@ public class HW17 {
             return;
         }
         for (int i = begin; i <arr.length ; i++) {
+            if(i>begin&&arr[i]==arr[i-1]) continue;
             sum+=arr[i];
             dfs(arr,i+1,sum,allSum,count+1);
             sum-=arr[i];

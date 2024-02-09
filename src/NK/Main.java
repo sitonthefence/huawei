@@ -1,137 +1,87 @@
 package NK;
-import java.util.ArrayDeque;
-
 import java.util.Scanner;
+import java.util.StringJoiner;
 
-// 本题实际考试为核心代码模式，即只需要写出下面Solution类实现即可
-class Solution {
-    static int[][] offsets = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
-
-    int calcTime(
-            int[][] lights, int timePerRoad, int rowStart, int colStart, int rowEnd, int colEnd) {
-        int n = lights.length;
-        int m = lights[0].length;
-
-        int[][][] dist = new int[n][m][4];
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                // 到达位置(i,j)的路径有四个来源方向
-                for (int k = 0; k < 4; k++) {
-                    // dist[i][j][k] 表示从来源方向k到达位置(i,j)所需要的时间，初始化INT_MAX
-                    dist[i][j][k] = Integer.MAX_VALUE;
-                }
-            }
-        }
-
-        // 小顶堆，堆中元素是数组 [前一个位置行号，前一个位置列号，当前位置行号，当前位置列号，到达当前位置需要的时间]
-        // 到达当前位置的时间越小，优先级越高
-        ArrayDeque<int[]> pq = new ArrayDeque<>();
-
-        // 四个来源方向到达出发点位置 (rowStart, colStart) 所需时间均为 0
-        for (int k = 0; k < 4; k++) {
-            dist[rowStart][colStart][k] = 0;
-            // 出发点位置没有前一个位置，因此前一个位置设为(-1,-1)
-
-        }
-        pq.add(new int[] {-1, -1, rowStart, colStart, 0});
-        // 每次取出最短路
-        while (pq.size() > 0) {
-            int[] tmp = pq.poll();
-
-            int preX = tmp[0];
-            int preY = tmp[1];
-            int curX = tmp[2];
-            int curY = tmp[3];
-            int cost = tmp[4];
-
-            // 向四个方向探索
-            for (int k = 0; k < 4; k++) {
-                // 新位置
-                int newX = curX + offsets[k][0];
-                int newY = curY + offsets[k][1];
-
-                // 新位置越界，则不可进入
-                if (newX < 0 || newX >= n || newY < 0 || newY >= m) continue;
-
-                // 本题不允许掉头，因此新位置处于掉头位置的话，不可进入
-                if (newX == preX && newY == preY) continue;
-
-                // 每走一步都要花费 timePerRoad 单位时间
-                int newCost = cost + timePerRoad;
-
-                // 出发的第一步，或者右拐，不需要等待红绿灯，其他情况需要等待红绿灯 lights[curX][curY] 单位时间
-                if (preX != -1 && preY != -1 && getDirection(preX, preY, curX, curY, newX, newY) >= 0) {
-                    newCost += lights[curX][curY];
-                }
-
-                // 如果以来源方向k到达位置（newX, newY）花费的时间 newCost 并非更优，则终止对应路径探索
-                if (newCost >= dist[newX][newY][k]) continue;
-
-                // 否则更新为更优时间
-                dist[newX][newY][k] = newCost;
-                // 并继续探索该路径
-                pq.add(new int[] {curX, curY, newX, newY, newCost});
-            }
-        }
-
-        // 最终取(rowEnd, colEnd)终点位置的四个来源方向路径中最短时间的作为题解
-        int ans = Integer.MAX_VALUE;
-        for (int k = 0; k < 4; k++) {
-            ans = Math.min(ans, dist[rowEnd][colEnd][k]);
-        }
-
-        return ans;
-    }
-
-    /**
-     * 根据三点坐标，确定拐弯方向
-     *
-     * @param preX 前一个点横坐标
-     * @param preY 前一个点纵坐标
-     * @param curX 当前点横坐标
-     * @param curY 当前点纵坐标
-     * @param nextX 下一个点横坐标
-     * @param nextY 下一个点纵坐标
-     * @return cur到next的拐弯方向， >0 表示向左拐， ==0 表示直行（含调头）， <0 表示向右拐
-     */
-    public static int getDirection(int preX, int preY, int curX, int curY, int nextX, int nextY) {
-        // 向量 pre->cur
-        int dx1 = curX - preX;
-        int dy1 = curY - preY;
-
-        // 向量 cur->next
-        int dx2 = nextX - curX;
-        int dy2 = nextY - curY;
-
-        // 两个向量的叉积 >0 表示向左拐， ==0 表示直行（含调头）， <0 表示向右拐
-        return dx1 * dy2 - dx2 * dy1;
-    }
-}
-
-// 输入处理类，本题实际考试为核心代码模式，无需进行输入处理
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-        int n = sc.nextInt();
-        int m = sc.nextInt();
+        // 将文件内容压缩为一行，换行使用换行符\n代替
+        StringJoiner sj = new StringJoiner("\n");
+        while (sc.hasNextLine()) {
+            String line = sc.nextLine();
 
-        int[][] lights = new int[n][m];
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                lights[i][j] = sc.nextInt();
-            }
+            // 本地测试时，以输入空行作为结束条件，实际考试时无需此逻辑
+            //      if (line.length() == 0) break;
+
+            sj.add(line);
         }
 
-        int timePreRoad = sc.nextInt();
+        System.out.println(getResult(sj.toString()));
+    }
 
-        int rowStart = sc.nextInt();
-        int colStart = sc.nextInt();
+    public static int getResult(String s) {
+        // 记录题解，即文件中包含的文本数量
+        int ans = 0;
 
-        int rowEnd = sc.nextInt();
-        int colEnd = sc.nextInt();
+        // 当前文本的"非空"内容长度
+        int content_length = 0;
 
-        System.out.println(
-                new Solution().calcTime(lights, timePreRoad, rowStart, colStart, rowEnd, colEnd));
+        // 单引号开闭状态，当前解法默认单引号必然成对出现
+        boolean sq_flag = false;
+        // 双引号开闭状态，当前解法默认双引号必然成对出现
+        boolean dq_flag = false;
+
+        // 定义一个指针 i 用于扫描文件内容
+        int i = 0;
+
+        while (i < s.length()) {
+            // 当前正在被扫描的字符
+            char c = s.charAt(i);
+
+            switch (c) {
+                case '\\': // 如果扫描到转义\符号，则自动跳过转义符号及其后面的转义字符
+                    i++;
+                    break;
+                case '\"': // 如果扫描到双引号
+                    if (!sq_flag) { // 如果该双引号不在成对单引号内部
+                        dq_flag = !dq_flag; // 则双引号开闭状态取反
+                    }
+                    break;
+                case '\'': // 如果扫描到单引号
+                    if (!dq_flag) { // 如果该单引号不在成对双引号内部
+                        sq_flag = !sq_flag; // 则单引号开闭状态取反
+                    }
+                    break;
+                case '-': // 如果扫描到 '-' ，则可能是注释符号，也可能不是
+                    if (!sq_flag && !dq_flag) { // 如果该 '-' 处于成对双向号，或成对单引号内部，则不是注释符号，否则可能是注释符号
+                        if (++i < s.length() && s.charAt(i) == '-') { // 如果该 '-' 后面紧跟着的字符还是 '-'，则确定当前遇到注释符号
+                            while (++i < s.length() && s.charAt(i) != '\n') {} // 注释符号后面的内容（直到行末）都不算文本，即不会增加文本数量
+                        }
+                    }
+                    break;
+                case ';': // 如果扫描到 ';'
+                    if (!sq_flag & !dq_flag && content_length > 0) { // 该分号不处于成对单引号或成对双引号内部，且分号前存在非空内容
+                        ans++; // 则文本数量++
+                        content_length = 0; // 继续统计下一个文本
+                    }
+                    break;
+                default: // 如果扫描到其他字符，且该字符非空白字符，则非空文本内容长度++
+                    if (!Character.isWhitespace(c)) {
+                        content_length++;
+                    }
+                    break;
+            }
+
+            // 继续扫描下一个字符
+            i++;
+        }
+
+        // 题目说最后一个文本可以没有分号，即最后的文本只有存在非空内容，即为一个文本
+        if (content_length > 0) {
+            ans++;
+        }
+
+        return ans;
     }
 }

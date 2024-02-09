@@ -10,7 +10,7 @@ public class HW48TWO {
     static  LinkedList<Integer> path;
    static   int[] arr1;
    static boolean[] used;
-   static int max=0;
+   static int max=Integer.MIN_VALUE;
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
         String[] split1 = in.nextLine().split(" ");

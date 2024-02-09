@@ -20,13 +20,7 @@ public class HW58TWO {
             }else {
                 count=1;
                 currentChar=source.charAt(i);
-                if(!map.containsKey(source.charAt(i))){
-                    map.put(currentChar,1);
-                }else {
-                    if(count>map.get(currentChar)){
-                        map.put(currentChar,count);
-                    }
-                }
+                map.putIfAbsent(currentChar,1);
 
             }
         }
