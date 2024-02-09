@@ -17,10 +17,10 @@ public class HW68TWO {
         instance.setMaximumFractionDigits(3);
 
         if (vehicleNum==1){
-        System.out.println(instance.format(distance/speed[0]));
-        return;
-       }
-       double preAnswer=distance/speed[0];
+            System.out.println(instance.format(distance/speed[0]));
+            return;
+        }
+        double preAnswer=distance/speed[0];
        double curAnswer=0;
         for (int i = 1; i <vehicleNum ; i++) {
             if(distance/speed[i]<=preAnswer-1){
