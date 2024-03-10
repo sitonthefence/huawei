@@ -8,23 +8,28 @@ public class HJ68 {
         while (in.hasNext()){
             int length = in.nextInt();
             int k= in.nextInt();
-            Map<String,Integer> map=new LinkedHashMap<>();
+            List<Pair> list=new ArrayList<>();
             for (int i = 0; i < length; i++) {
-                map.put(in.next(),in.nextInt());
+                list.add(new Pair(in.next(),in.nextInt()));
             }
-            ArrayList<Map.Entry<String, Integer>> list = new ArrayList<>(map.entrySet());
-            if(k==1){
-                Collections.sort(list,(o1,o2)-> o1.getValue()-o2.getValue());
+            if(k==0){
+                Collections.sort(list,(a,b)->b.score-a.score);
 
             }else {
-
-                Collections.sort(list,(o1,o2)-> o2.getValue()-o1.getValue());
+                Collections.sort(list,(a,b)->a.score-b.score);
             }
-            for (int i = 0; i < list.size(); i++) {
-                System.out.println(list.get(i).getKey()+" "+list.get(i).getValue());
+            for (Pair pair : list) {
+                System.out.println(pair.name+" "+pair.score);
             }
+        }
+    }
+    static class Pair{
+        String name;
+        Integer score;
 
-
+        public Pair(String name, Integer score) {
+            this.name = name;
+            this.score = score;
         }
     }
 

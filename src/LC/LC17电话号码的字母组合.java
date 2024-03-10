@@ -3,7 +3,7 @@ package LC;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LC17 {
+public class LC17电话号码的字母组合 {
 
     static List<String> result =new ArrayList<>();
     static StringBuilder stringBuilder=new StringBuilder();

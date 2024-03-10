@@ -60,6 +60,7 @@ public class HW13TWO {
         System.out.println("["+result[0].value+","+result[1].value+","+result[2].value+"]");
     }
     static class IndexAndValue{
+
         int index;
         int value;
 
