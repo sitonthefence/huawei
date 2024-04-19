@@ -1,6 +1,6 @@
 package LC;
 
-public class LC5最长回文子串 {
+public class LC5最长回文子串_超时 {
 
     public boolean isPalindromic(String s) {
         int len = s.length();

@@ -12,9 +12,9 @@ public class LC224基本计算器 {
         Stack<Integer> stack = new Stack<>();
         int sign = 1;
         for (int i = 0; i < n; i++) {
-            if (array[i] == ' ') {
+      /*      if (array[i] == ' ') {
                 continue;
-            }
+            }*/
             if (array[i] >= '0' && array[i] <= '9') {
                 num = num * 10 + array[i] - '0';
             } else if (array[i] == '+' || array[i] == '-') {

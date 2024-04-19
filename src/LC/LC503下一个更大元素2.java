@@ -3,7 +3,7 @@ package LC;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 
-public class LC503下一个更大元素 {
+public class LC503下一个更大元素2 {
     public static void main(String[] args) {
         int[] nums={1,0,0};
         int[] ints = nextGreaterElements(nums);

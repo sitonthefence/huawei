@@ -9,29 +9,29 @@ public class LC92反转链表2 {
  ListNode(int val, ListNode next) { this.val = val; this.next = next; }
  }
     public ListNode reverseBetween(ListNode head, int left, int right) {
-        // 定义一个dummyHead, 方便处理
-        ListNode dummyHead = new ListNode(0);
-        dummyHead.next = head;
+        if (head == null || left == right) return head;
 
-        // 初始化指针
-        ListNode g = dummyHead;
-        ListNode p = dummyHead.next;
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode prev = dummy;
 
-        // 将指针移到相应的位置
-        for(int step = 0; step < left - 1; step++) {
-            g = g.next; p = p.next;
+        // Move prev to the node before the left position
+        for (int i = 1; i < left; i++) {
+            prev = prev.next;
         }
 
-        // 头插法插入节点
+        ListNode curr = prev.next;
+        ListNode next = null;
+
+        // Reverse the sublist from left to right
         for (int i = 0; i < right - left; i++) {
-            ListNode removed = p.next;
-            p.next = p.next.next;
-
-            removed.next = g.next;
-            g.next = removed;
+            next = curr.next;
+            curr.next = next.next;
+            next.next = prev.next;
+            prev.next = next;
         }
 
-        return dummyHead.next;
+        return dummy.next;
 
     }
 }

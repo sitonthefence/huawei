@@ -3,18 +3,17 @@ package LC;
 import java.util.*;
 
 public class LC49字母异位词分组 {
-    public boolean canJump(int[] nums) {
-        int n = nums.length;
-        int rightmost = 0;
-        for (int i = 0; i < n; ++i) {
-            if (i <= rightmost) {
-                rightmost = Math.max(rightmost, i + nums[i]);
-                if (rightmost >= n - 1) {
-                    return true;
-                }
-            }
+    public List<List<String>> groupAnagrams(String[] strs) {
+        Map<String,List<String>> map=new HashMap<>();
+        for (int i = 0; i <strs.length ; i++) {
+            char[] temp = strs[i].toCharArray();
+            Arrays.sort(temp);
+            String key=new String(temp);
+            map.putIfAbsent(key,new ArrayList<>());
+            map.get(key).add(strs[i]);
         }
-        return false;
+        return  new ArrayList<>(map.values());
+
     }
 
 }

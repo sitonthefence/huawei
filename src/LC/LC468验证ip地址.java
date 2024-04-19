@@ -28,7 +28,8 @@ public class LC468验证ip地址 {
         for (String s : split) {
             if(s.length()>4||s.length()==0) return false;
             for (int i = 0; i <s.length() ; i++) {
-                if(!(Character.isDigit(s.charAt(i))||Character.toLowerCase(s.charAt(i))>='a'&&Character.toLowerCase(s.charAt(i))<='f')){
+                if(!(Character.isDigit(s.charAt(i))
+                        ||Character.toLowerCase(s.charAt(i))>='a'&&Character.toLowerCase(s.charAt(i))<='f')){
                     return false;
                 }
             }

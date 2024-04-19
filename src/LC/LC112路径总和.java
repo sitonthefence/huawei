@@ -12,7 +12,8 @@ public class LC112路径总和 {
      }
 
 
-         return  hasPathSum(root.left,targetSum-root.val)||hasPathSum(root.right,targetSum-root.val);
+         return  hasPathSum(root.left,targetSum-root.val)||
+                 hasPathSum(root.right,targetSum-root.val);
 
 
 
